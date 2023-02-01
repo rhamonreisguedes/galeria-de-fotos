@@ -1,21 +1,22 @@
 import * as C from "./App.styles";
-import * as Photos from './services/photos';
-import {useState, useEffect} from 'react';
-import {Photo} from './types/Photo'
+import * as Photos from "./services/photos";
+import { useState, useEffect } from "react";
+import { Photo } from "./types/Photo";
+import { PhotoItem } from "./components/PhotoItem";
 
 const App = () => {
   const [loading, setLoading] = useState(false);
-  const [photos, setPhotos] = useState<Photo[]>([])
+  const [photos, setPhotos] = useState<Photo[]>([]);
 
-  useEffect(() =>{
+  useEffect(() => {
     const getPhotos = async () => {
       setLoading(true);
       setPhotos(await Photos.getAll());
       setLoading(false);
-    }
+    };
 
     getPhotos();
-  }, [])
+  }, []);
 
   return (
     <C.Container>
@@ -23,28 +24,28 @@ const App = () => {
         <C.Header>Galeria de Fotos</C.Header>
 
         {/* Área de upload */}
-        
-        {loading && 
+
+        {loading && (
           <C.ScreenWarning>
             <div className="emoji">✋</div>
-            <div>Carregando...</div>  
+            <div>Carregando...</div>
           </C.ScreenWarning>
-        }
+        )}
 
-        {!loading && photos.length > 0 && 
+        {!loading && photos.length > 0 && (
           <C.PhotoList>
             {photos.map((item, index) => (
-              <div>{item.name}</div>
+              <PhotoItem key={index} url={item.url} name={item.name} />
             ))}
           </C.PhotoList>
-        }
+        )}
 
-        {!loading && photos.length === 0 && 
+        {!loading && photos.length === 0 && (
           <C.ScreenWarning>
-          <div className="emoji">😢</div>
-          <div>Não há fotos cadastradas.</div>  
-        </C.ScreenWarning>
-        }
+            <div className="emoji">😢</div>
+            <div>Não há fotos cadastradas.</div>
+          </C.ScreenWarning>
+        )}
       </C.Area>
     </C.Container>
   );
